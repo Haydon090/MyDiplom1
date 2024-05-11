@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Curse;
+use App\Models\Material;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use App\Models\Lession;
@@ -54,7 +55,10 @@ class LessionsController extends Controller
     }
     public function show(Lession $lession)
     {
-        return view('lessions.show')->with('lession',$lession);
+         $materials = Material::where('Lession_id', $lession->id)->orderBy('Number')->get();
+
+        //dd($materials[0]->Url);
+        return view('lessions.show')->with('lession',$lession)->with('materials', $materials);
     }
     public function edit(Lession $lession, $curseId, Request $request)
     {
@@ -86,7 +90,10 @@ class LessionsController extends Controller
     {
         // Находим курс
         $curse = Curse::findOrFail($curseId);
-
+        $materials = Material::where('Lession_id', $lessionId)->get();
+        foreach ($materials as $material) {
+            $material->delete();
+        }
         // Проверяем, принадлежит ли урок к указанному курсу
         $lession = $curse->lessions()->find($lessionId);
         if (!$lession) {

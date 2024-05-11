@@ -3,6 +3,7 @@ use App\Http\Controllers\CursesController;
 use App\Http\Controllers\LessionsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SocialController;
+use App\Http\Controllers\MaterialsConroller;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -44,3 +45,5 @@ Route::post('/courses/{curseId}/lessons/{lessionId}/move-down', [LessionsControl
 Route::get('/curses/{curseId}/lessons/{lession}/update', [LessionsController::class,'update'])->name('lessions.update');
 Route::post('/edit/lession/{lession}/{curseId}', [LessionsController::class,'edit'])->name('lession.edit');
 Route::get('/show/lession/{lession}', [LessionsController::class,'show'])->name('lessions.show');
+
+Route::post('/materials', [MaterialsConroller::class, 'store'])->name('materials.store');

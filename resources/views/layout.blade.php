@@ -13,7 +13,7 @@
 <body>
     <header class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <img src="{{ asset('images/logo.jpg') }}" alt="Example Image"  width="200" height="100">
+            <h1>Curses</h1>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -68,5 +68,6 @@
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
 </body>
 </html>
