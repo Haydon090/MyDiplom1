@@ -5,6 +5,8 @@ namespace App\Http\Requests\Auth;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -44,6 +46,20 @@ class LoginRequest extends FormRequest
     public function authenticate()
     {
         $this->ensureIsNotRateLimited();
+        $user = \App\Models\User::where('email', $this->email)->first();
+
+        if ($user) {
+            Log::info('Полученные данные пользователя: ', ['user' => $user]);
+            $isPasswordCorrect = Hash::check($this->password, $user->password);
+            Log::info('Введенный пароль: ' . $this->password);
+            Log::info('Хешированный пароль из БД: ' . $user->password);
+            Log::info('Хешированный пароль из БД: ' . $user->email);
+            Log::info('Пароль верен: ' . ($isPasswordCorrect ? 'Да' : 'Нет'));
+        } else {
+            Log::info('Пользователь не найден');
+        }
+
+
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());

@@ -1,18 +1,26 @@
 @extends('layout')
 
-@section('content')
-<div class="container">
+@section('content')<div class="container">
     <ul>
         @foreach($materials as $material)
-            @if($material->Type === 'text')
-                {!! $material->Content !!}
-            @elseif ($material->Type === 'image')
+            <li>
+                @if($material->Type === 'text')
                 <div>
-                    <img src="{{ asset($material->File_path) }}" class="mt-3 mb-3" style="max-width: 100%; height: auto" width="900" height="300">
+                    {!! $material->Content !!}
                 </div>
-            @elseif ($material->Type == 'video')
-                 {!! $material->Url !!}
-            @endif
+                @elseif ($material->Type === 'image')
+                    <div>
+                        <img src="{{ asset($material->File_path) }}" class="mt-3 mb-3" style="max-width: 100%; height: auto" width="900" height="300">
+                    </div>
+                @elseif ($material->Type === 'video')
+                    {!! str_replace(['width="560"', 'height="315"'], ['width="900"', 'height="500"'], $material->Url) !!}
+                @endif
+                <form action="{{ route('materials.destroy', ['id' => $material->id]) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-xs btn-sm mb-1"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                </form>
+            </li>
         @endforeach
     </ul>
 </div>

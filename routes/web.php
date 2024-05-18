@@ -47,3 +47,4 @@ Route::post('/edit/lession/{lession}/{curseId}', [LessionsController::class,'edi
 Route::get('/show/lession/{lession}', [LessionsController::class,'show'])->name('lessions.show');
 
 Route::post('/materials', [MaterialsConroller::class, 'store'])->name('materials.store');
+Route::delete('/materials/{id}', [MaterialsConroller::class, 'destroy'])->name('materials.destroy');

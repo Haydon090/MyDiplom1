@@ -7,7 +7,9 @@
                 <h2>Courses</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-success mb-3" href="{{ route('curses.create') }}">Create New Course</a>
+                @if (auth()->user()->role == 'Admin')
+                    <a class="btn btn-success mb-3" href="{{ route('curses.create') }}">Create New Course</a>
+                @endif
             </div>
 
             <form action="{{ route('curses.index') }}" method="GET" class="input-group mb-3">
@@ -33,14 +35,20 @@
                         <h5 class="card-title">{{ $curse->Name }}</h5>
                         <p class="card-text">{{ $curse->Description }}</p>
                         <p class="card-text">Price: {{ $curse->Price }}</p>
-                        <a href="{{ route('curses.show',$curse->id) }}" class="btn btn-info mb-2">посмотреть</a>
-                        <a href="{{ route('curses.edit',$curse->id) }}" class="btn btn-primary mb-2">редактировать</a>
-                        <a href="{{ route('curses.add',$curse->id) }}" class="btn btn-primary">добавить на аккаунт</a>
-                        <form action="{{ route('curses.destroy',$curse->id) }}" method="DELETE">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger mt-3">Delete</button>
-                        </form>
+                        <a href="{{ route('curses.show', $curse->id) }}" class="btn btn-info mb-2">посмотреть</a>
+                        @if (auth()->user()->role_id == 1)
+                            <a href="{{ route('curses.edit', $curse->id) }}" class="btn btn-primary mb-2">редактировать</a>
+                            <form action="{{ route('curses.destroy', $curse->id) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        @endif
+                        @if (auth()->user()->role_id == 1)
+                        <a href="{{ route('curses.add', $curse->id) }}" class="btn btn-primary ">добавить на аккаунт</a>
+                        @else
+                        <a href="{{ route('curses.add', $curse->id) }}" class="btn btn-primary mb-2">добавить на аккаунт</a>
+                        @endif
                     </div>
                 </div>
             </div>

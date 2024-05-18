@@ -30,7 +30,7 @@
             <li class="nav-item dropdown ml-10">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @auth
-                        {{ Auth::user()->Name }}
+                        {{ Auth::user()->name }}
                     @else
                         Пользователь
                     @endauth

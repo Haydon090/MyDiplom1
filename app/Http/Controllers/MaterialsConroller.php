@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 use App\Models\Material;
 use Dotenv\Validator;
+use Facade\FlareClient\Stacktrace\File;
 use Illuminate\Http\Request;
 use App\Models\Lession;
+use Illuminate\Support\Facades\Storage;
 class MaterialsConroller extends Controller
 {
     public function store(Request $request)
@@ -58,5 +60,20 @@ class MaterialsConroller extends Controller
 
         return response()->json(['message' => 'Material successfully stored'], 200);
     }
+    public function destroy($id)
+    {
+        // Находим материал по его идентификатору
+        $material = Material::findOrFail($id);
 
+        // Удаляем файл, если это изображение
+        if ($material->Type === 'image') {
+            Storage::delete($material->File_path);
+        }
+
+        // Удаляем материал из базы данных
+        $material->delete();
+
+        // Возвращаем успешный ответ
+        return redirect()->back()->with('success', 'lession deleted successfully.');
+    }
 }
