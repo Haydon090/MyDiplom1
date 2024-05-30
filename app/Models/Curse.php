@@ -15,6 +15,19 @@ class Curse extends Model
 {
     return $this->belongsToMany(User::class);
 }
+protected static function boot()
+{
+    parent::boot();
+
+    static::deleting(function ($curse) {
+        // При удалении курса удаляем связанные записи из таблицы промежуточной связи с тегами
+        $curse->tags()->detach();
+    });
+}
+public function tags()
+{
+    return $this->belongsToMany(Tag::class);
+}
 public function lessions()
 {
     return $this->hasMany(Lession::class);

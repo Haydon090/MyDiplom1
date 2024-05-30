@@ -1,8 +1,9 @@
 @extends('layout')
 
-@section('content')<div class="container">
+@section('content')
+<div class="container">
     <ul>
-        @foreach($materials as $material)
+        @foreach($materials as $index => $material)
             <li>
                 @if($material->Type === 'text')
                 <div>
@@ -15,17 +16,34 @@
                 @elseif ($material->Type === 'video')
                     {!! str_replace(['width="560"', 'height="315"'], ['width="900"', 'height="500"'], $material->Url) !!}
                 @endif
-                <form action="{{ route('materials.destroy', ['id' => $material->id]) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-xs btn-sm mb-1"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                </form>
+                @if (auth()->user()->role_id == 1)
+                <div class="mt-2">
+                    @if ($index > 0)
+                        <form action="{{ route('materials.moveUp', ['currentId' => $material->id, 'prevId' => $materials[$index - 1]->id]) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-arrow-up"></i></button>
+                        </form>
+                    @endif
+                    @if ($index < count($materials) - 1)
+                        <form action="{{ route('materials.moveDown', ['currentId' => $material->id, 'nextId' => $materials[$index + 1]->id]) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-arrow-down"></i></button>
+                        </form>
+                    @endif
+                    <form action="{{ route('materials.destroy', ['id' => $material->id]) }}" method="POST" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                    </form>
+                </div>
+                @endif
             </li>
         @endforeach
     </ul>
 </div>
-
-
+@if (auth()->user()->role_id == 1)
 <div class="container">
     <button id="addMaterialBtn" class="btn btn-primary">Add Material</button>
 
@@ -38,7 +56,6 @@
                 <label for="materialType">Material Type:</label>
                 <select id="materialType" class="form-control" name="materialType">
                     <option value="text">Text</option>
-
                     <option value="video">Video Link</option>
                     <option value="image">Image</option>
                 </select>
@@ -48,13 +65,13 @@
         </form>
     </div>
 </div>
-
+@endif
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
 <script>
-    $('#materialForm').on('submit', function(event) {
+     $('#materialForm').on('submit', function(event) {
     event.preventDefault();
 
     // Получаем содержимое Quill-редактора

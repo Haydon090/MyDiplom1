@@ -36,15 +36,18 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Description:</strong>
-                    <textarea class="form-control" style="height:150px" name="Description"
-                              placeholder="Description"></textarea>
+                    <textarea class="form-control" style="height:150px" name="Description" placeholder="Description">{{ old('Description') }}</textarea>
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-12 col-md-12">
+
+
+<div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Price:</strong>
-                    <input type="number" name="Price" class="form-control" placeholder="Price">
+                    <strong>Tags:</strong><br>
+                    @foreach($tags as $tag)
+                        <label class="checkbox-inline"><input type="checkbox" name="tags[]" value="{{ $tag->id }}"> {{ $tag->Name }}</label>
+                    @endforeach
                 </div>
             </div>
 
@@ -54,4 +57,14 @@
         </div>
     </form>
 
+    <div class="mt-3">
+        <form action="{{ route('tags.store') }}" method="POST">
+            @csrf
+            <div class="form-group">
+                <label for="tagName">Create Your Own Tag:</label>
+                <input type="text" class="form-control" id="tagName" name="Name" placeholder="Enter Tag Name">
+            </div>
+            <button type="submit" class="btn btn-primary">Create Tag</button>
+        </form>
+    </div>
 @endsection

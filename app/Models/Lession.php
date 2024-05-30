@@ -12,6 +12,10 @@ class Lession extends Model
     {
         return $this->belongsTo(Curse::class);
     }
+    public function test()
+    {
+        return $this->hasOne(Test::class);
+    }
     public function materials()
     {
         return $this->hasMany(Material::class);

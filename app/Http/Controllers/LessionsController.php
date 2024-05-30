@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Curse;
 use App\Models\Material;
+use App\Models\Test;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use App\Models\Lession;
@@ -26,7 +27,10 @@ class LessionsController extends Controller
         $lession->curse_id = $id;
         $lession->Number = $maxNumber +1;
         $lession->save();
-
+        $test = new Test();
+        $test->title = "";
+        $test->lession_id = $lession->id;
+        $test->save();
         return redirect()->route('curses.show', $id)->with('success', 'lession created successfully.');
     }
     public function moveUp($curseId, $lessionId)

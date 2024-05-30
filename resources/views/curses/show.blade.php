@@ -39,6 +39,7 @@
                                 <div class="row">
 
                                 <div class="col">
+                                    @if (auth()->user()->role_id == 1)
                                 @if ($index > 0)
                                     <form action="{{ route('curses.lessions.move-up', ['curseId' => $curse->id, 'lessionId' => $lession->id]) }}" method="POST">
                                         @csrf
@@ -57,19 +58,27 @@
                                     <button type="submit" class="btn btn-danger btn-xs btn-sm mb-1"><i class="fa fa-trash" aria-hidden="true"></i></button>
                                 </form>
                                 <form >
+                                    <a class="btn btn-xs btn-primary mb-2 btn-sm" href="{{ route('tests.show', $lession) }}">Test</a>
+                                </form>
+                                <form >
                                     <a href="{{ route('lessions.update', ['curseId' => $curse->id, 'lession' => $lession]) }}" class="btn btn-xs btn-primary mb-2 btn-sm" method="GET"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                 </form>
+                                @endif
+
                                 <form >
                                     <a href="{{ route('lessions.show', ['lession' => $lession]) }}" class="btn btn-xs btn-primary mb-2 btn-sm" method="GET"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                 </form>
+                                @if(auth()->user()->role_id == 2)
+                                <a href="{{ route('tests.take', $lession->test) }}" class="btn btn-xs btn-primary mb-2 btn-sm ">Тест</a>
+                                @endif
                             </div>
-
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-    </div>
+    </div>@if (auth()->user()->role_id == 1)
     <a class="btn btn-success mb-3" href="{{ route('lessions.create', $curse->id) }}">Create New Lesson</a>
+    @endif
 @endsection

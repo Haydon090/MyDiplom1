@@ -6,21 +6,32 @@ use App\Models\Curse;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Tag;
 class cursesController extends Controller
 {
     public function index(Request $request)
     {
         $query = $request->input('query');
+        $selectedTags = $request->input('tags', []);
+
+        $cursesQuery = Curse::query();
 
         if ($query) {
-            $curses = Curse::where('Name', 'like', "%$query%")
-                            ->orWhere('Description', 'like', "%$query%")
-                            ->get();
-        } else {
-            $curses = Curse::all();
+            $cursesQuery->where('curses.Name', 'like', "%$query%")
+                        ->orWhere('curses.Description', 'like', "%$query%");
         }
 
-        return view("dashboard", compact('curses'));
+        if ($selectedTags) {
+            $cursesQuery->whereHas('tags', function ($query) use ($selectedTags) {
+                $query->whereIn('tags.id', $selectedTags);
+            });
+        }
+
+        $curses = $cursesQuery->get();
+
+        $tags = Tag::all();
+
+        return view('dashboard', ['curses' => $curses, 'tags' => $tags, 'selectedTags' => $selectedTags]);
     }
     public function myCurses(){
         return view("curses.myCurses");
@@ -37,7 +48,8 @@ class cursesController extends Controller
 
     public function create()
     {
-        return view('curses.create');
+        $tags = Tag::all(); // получаем список всех тегов
+        return view('curses.create', compact('tags'));
     }
     public function addUserToCourse(int $curseId)
 {
@@ -61,7 +73,14 @@ class cursesController extends Controller
     {
 
 
-        Curse::create($request->all());
+        $curse = Curse::create($request->all());
+
+        // Если выбраны теги, добавляем их к курсу
+        if ($request->has('tags')) {
+            $tags = $request->input('tags');
+            $curse->tags()->attach($tags);
+        }
+
         return redirect()->route('dashboard')->with('success', 'Curse created');
     }
     public function show(int $id)
@@ -84,9 +103,10 @@ class cursesController extends Controller
         $curse->update($request->all());
         return redirect()->route('dashboard')->with('success', 'curse updated');
     }
-    public function destroy(Curse $Curse)
+    public function destroy(Curse $curse)
     {
-        $Curse->delete();
+
+        $curse->delete();
         return redirect()->route('dashboard')->with('success', 'Curse deleted');
     }
 }

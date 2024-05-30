@@ -7,7 +7,7 @@
                 <h2>Courses</h2>
             </div>
             <div class="pull-right">
-                @if (auth()->user()->role == 'Admin')
+                @if (auth()->user()->role_id == 1)
                     <a class="btn btn-success mb-3" href="{{ route('curses.create') }}">Create New Course</a>
                 @endif
             </div>
@@ -34,14 +34,22 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $curse->Name }}</h5>
                         <p class="card-text">{{ $curse->Description }}</p>
-                        <p class="card-text">Price: {{ $curse->Price }}</p>
+
+
+                        <div>
+                        @foreach ($curse->tags->take(3) as $tag)
+    {{ $tag->Name }}@if (!$loop->last), @endif
+@endforeach
+@if ($curse->tags->count() > 3)
+    ...
+@endif</div>
                         <a href="{{ route('curses.show', $curse->id) }}" class="btn btn-info mb-2">посмотреть</a>
                         @if (auth()->user()->role_id == 1)
                             <a href="{{ route('curses.edit', $curse->id) }}" class="btn btn-primary mb-2">редактировать</a>
-                            <form action="{{ route('curses.destroy', $curse->id) }}" method="POST" style="display: inline;">
+                            <form action="{{ route('curses.destroy', $curse) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger">удалить</button>
                             </form>
                         @endif
                         @if (auth()->user()->role_id == 1)

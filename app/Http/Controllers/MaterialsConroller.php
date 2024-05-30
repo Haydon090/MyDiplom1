@@ -38,28 +38,21 @@ class MaterialsConroller extends Controller
                 $image->move(public_path('images'), $imageName);
                 $material = new Material();
                 $material->FileName = $imageName;
-
                 $material->File_path = $imagePath;
                 $material->Type = 'image';
                 $material->Lession_id = $request->input('lessionId');
                 $material->Number = $maxNumber + 1;
                 $material->save();
             } else {
-
                 return response()->json(['error' => 'Image not provided'], 400);
             }
         } else {
-
             return response()->json(['error' => 'Invalid material type'], 400);
         }
-
-        // Привязываем материал к уроку
-
-
         // Возвращаем успешный ответ
-
         return response()->json(['message' => 'Material successfully stored'], 200);
     }
+
     public function destroy($id)
     {
         // Находим материал по его идентификатору
@@ -74,6 +67,61 @@ class MaterialsConroller extends Controller
         $material->delete();
 
         // Возвращаем успешный ответ
-        return redirect()->back()->with('success', 'lession deleted successfully.');
+        return redirect()->back()->with('success', 'Material deleted successfully.');
+    }
+
+    public function moveUp($currentId, $prevId)
+    {
+        $currentMaterial = Material::findOrFail($currentId);
+        $prevMaterial = Material::findOrFail($prevId);
+
+        // Меняем местами номера
+        $temp = $currentMaterial->Number;
+        $currentMaterial->Number = $prevMaterial->Number;
+        $prevMaterial->Number = $temp;
+
+        $currentMaterial->save();
+        $prevMaterial->save();
+
+        return redirect()->back()->with('success', 'Material moved up successfully.');
+    }
+   // MaterialController.php
+
+public function update(Request $request, $id)
+{
+    $material = Material::find($id);
+    $material->Type = $request->input('materialType');
+
+    if ($material->Type === 'text') {
+        $material->Content = $request->input('quillContent');
+    } else if ($material->Type === 'image') {
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $path = $file->store('images', 'public');
+            $material->File_path = $path;
+        }
+    } else if ($material->Type === 'video') {
+        $material->Url = $request->input('url');
+    }
+
+    $material->save();
+
+    return response()->json(['success' => true]);
+}
+
+    public function moveDown($currentId, $nextId)
+    {
+        $currentMaterial = Material::findOrFail($currentId);
+        $nextMaterial = Material::findOrFail($nextId);
+
+        // Меняем местами номера
+        $temp = $currentMaterial->Number;
+        $currentMaterial->Number = $nextMaterial->Number;
+        $nextMaterial->Number = $temp;
+
+        $currentMaterial->save();
+        $nextMaterial->save();
+
+        return redirect()->back()->with('success', 'Material moved down successfully.');
     }
 }

@@ -1,9 +1,12 @@
 <?php
 use App\Http\Controllers\CursesController;
 use App\Http\Controllers\LessionsController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SocialController;
 use App\Http\Controllers\MaterialsConroller;
+use App\Http\Controllers\TagsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,9 +35,10 @@ Route::resource('curses', CursesController::class);
 Route::get('/edit/{id}', [CursesController::class,'edit'])->name('curses.edit');
 Route::post('/edit/{curse}', [CursesController::class,'update'])->name('curse.update');
 Route::get('/show/{id}', [CursesController::class,'show'] )->name('curses.show');
-Route::delete('/dashboard',[CursesController::class,'destroy'])->name('curses.destroy');
+Route::delete('/dashboard/{curse}',[CursesController::class,'destroy'])->name('curses.destroy');
 
 Route::get("/myCursesIndex", [CursesController::class, 'indexMyCurses'])->name('curses.myCurses');
+Route::post('/tags', [TagsController::class, 'store'])->name('tags.store');
 require __DIR__.'/auth.php';
 
 Route::post('/courses/{curseId}/lessons', [LessionsController::class,'store'])->name('curses.lessions.store'); // Изменил название маршрута
@@ -48,3 +52,18 @@ Route::get('/show/lession/{lession}', [LessionsController::class,'show'])->name(
 
 Route::post('/materials', [MaterialsConroller::class, 'store'])->name('materials.store');
 Route::delete('/materials/{id}', [MaterialsConroller::class, 'destroy'])->name('materials.destroy');
+Route::put('/materials/move-up/{currentId}/{prevId}', [MaterialsConroller::class, 'moveUp'])->name('materials.moveUp');
+Route::put('/materials/move-down/{currentId}/{nextId}', [MaterialsConroller::class, 'moveDown'])->name('materials.moveDown');
+Route::put('/materials/{id}', [MaterialsConroller::class, 'update'])->name('materials.update');
+
+Route::get('/tests/create/{lession}', [TestController::class, 'create'])->name('tests.create');
+Route::post('/tests/{lession}', [TestController::class, 'store'])->name('tests.store');
+Route::get('/tests/{lession}', [TestController::class, 'show'])->name('tests.show');
+
+Route::get('tests/{test}/questions/create', [QuestionController::class, 'create'])->name('questions.create');
+Route::post('tests/{test}/questions', [QuestionController::class, 'store'])->name('questions.store');
+Route::delete('questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');
+Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])->name('questions.edit');
+Route::put('questions/{question}', [QuestionController::class, 'update'])->name('questions.update');
+Route::get('/tests/{test}/take', [TestController::class, 'take'])->name('tests.take');
+Route::post('/tests/{test}/submit', [TestController::class, 'submit'])->name('tests.submit');
