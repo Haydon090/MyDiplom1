@@ -4,7 +4,7 @@
 <div class="container">
     <ul>
         @foreach($materials as $index => $material)
-            <li>
+
                 @if($material->Type === 'text')
                 <div>
                     {!! $material->Content !!}
@@ -39,7 +39,7 @@
                     </form>
                 </div>
                 @endif
-            </li>
+
         @endforeach
     </ul>
 </div>
