@@ -17,6 +17,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Curse::class);
     }
+    public function ratings()
+    {
+        return $this->hasMany(CurseRating::class);
+    }
     /**
      * The attributes that are mass assignable.
      *

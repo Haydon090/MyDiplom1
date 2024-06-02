@@ -66,6 +66,16 @@
     </div>
 </div>
 @endif
+<div class="container mt-3">
+    <form action="{{ route('lession.complete', ['lession_id' => $lession->id]) }}" method="POST">
+        @csrf
+        @if ($lession->isCompletedByUser(auth()->id()))
+            <button type="submit" class="btn btn-success" disabled>Урок завершен</button>
+        @else
+            <button type="submit" class="btn btn-success">Завершить урок</button>
+        @endif
+    </form>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">

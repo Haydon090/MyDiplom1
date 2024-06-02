@@ -57,6 +57,23 @@
                         @else
                         <a href="{{ route('curses.add', $curse->id) }}" class="btn btn-primary mb-2">добавить на аккаунт</a>
                         @endif
+
+
+                        @if ($curse->hasUserRated(auth()->id()))
+                        <p class="text-secondary">пройден</p>
+                    @endif
+
+
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <p>
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                    <span style="display: inline-block;">{{ $curse->ratings_count }}</span>
+                                    <i class="fa fa-star" aria-hidden="true" style="margin-left: 10px;"></i>
+                                    <span style="display: inline-block;">{{ round($curse->ratings_avg, 2) }}</span>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

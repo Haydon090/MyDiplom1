@@ -1,6 +1,8 @@
 <?php
+use App\Http\Controllers\CurseRatingController;
 use App\Http\Controllers\CursesController;
 use App\Http\Controllers\LessionsController;
+use App\Http\Controllers\LessonProgressController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +38,7 @@ Route::get('/edit/{id}', [CursesController::class,'edit'])->name('curses.edit');
 Route::post('/edit/{curse}', [CursesController::class,'update'])->name('curse.update');
 Route::get('/show/{id}', [CursesController::class,'show'] )->name('curses.show');
 Route::delete('/dashboard/{curse}',[CursesController::class,'destroy'])->name('curses.destroy');
-
+Route::post("/curses/{curseId}/rate", [CurseRatingController::class, 'rateCurse'])->name('curses.rate');
 Route::get("/myCursesIndex", [CursesController::class, 'indexMyCurses'])->name('curses.myCurses');
 Route::post('/tags', [TagsController::class, 'store'])->name('tags.store');
 require __DIR__.'/auth.php';
@@ -67,3 +69,4 @@ Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])->na
 Route::put('questions/{question}', [QuestionController::class, 'update'])->name('questions.update');
 Route::get('/tests/{test}/take', [TestController::class, 'take'])->name('tests.take');
 Route::post('/tests/{test}/submit', [TestController::class, 'submit'])->name('tests.submit');
+Route::post('/lessions/{lession_id}/complete', [LessonProgressController::class, 'markLessonAsCompleted'])->name('lession.complete');

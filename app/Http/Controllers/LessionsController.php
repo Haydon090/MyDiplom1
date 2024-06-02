@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Curse;
 use App\Models\Material;
 use App\Models\Test;
+use App\Models\UserLessonProgress;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use App\Models\Lession;
@@ -14,6 +15,7 @@ class LessionsController extends Controller
     public function create(int $id){
         return view('lessions.create', compact('id'));
     }
+
     public function store(Request $request, int $id)
     {
         $request->validate([

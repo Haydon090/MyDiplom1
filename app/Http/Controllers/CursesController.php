@@ -27,11 +27,18 @@ class cursesController extends Controller
             });
         }
 
+        // Загружаем количество оценок для каждого курса
+        $cursesQuery->withCount('ratings');
+
+        // Загружаем средний рейтинг для каждого курса
+        $cursesQuery->withAvg('ratings as ratings_avg', 'rating');
+
+        // Сортируем курсы по среднему рейтингу в убывающем порядке
+        $cursesQuery->orderByDesc('ratings_avg');
+
         $curses = $cursesQuery->get();
 
-        $tags = Tag::all();
-
-        return view('dashboard', ['curses' => $curses, 'tags' => $tags, 'selectedTags' => $selectedTags]);
+        return view('dashboard', ['curses' => $curses]);
     }
     public function myCurses(){
         return view("curses.myCurses");
@@ -85,11 +92,16 @@ class cursesController extends Controller
     }
     public function show(int $id)
     {
+        $userId = auth()->id();
+
         $curse = Curse::with(['lessions' => function ($query) {
             $query->orderBy('Number');
+        }, 'lessions.userProgress' => function ($query) use ($userId) {
+            $query->where('user_id', $userId);
         }])->find($id);
-
-        return view('curses.show', compact('curse'));
+        $user = auth()->user();
+        $curse = Curse::withCount('ratings')->withAvg('ratings as ratings_avg', 'rating')->find($id);
+        return view('curses.show', compact('curse', 'userId','user'));
     }
 
     public function edit(int $id)

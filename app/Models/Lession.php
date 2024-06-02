@@ -12,6 +12,17 @@ class Lession extends Model
     {
         return $this->belongsTo(Curse::class);
     }
+    public function userProgress()
+    {
+        return $this->hasMany(UserLessonProgress::class, 'lession_id', 'id');
+    }
+    public function isCompletedByUser($userId)
+    {
+        // Проверяем, есть ли запись в таблице UserLessonProgress для указанного пользователя и этого урока
+        return UserLessonProgress::where('user_id', $userId)
+            ->where('lession_id', $this->id)
+            ->exists();
+    }
     public function test()
     {
         return $this->hasOne(Test::class);

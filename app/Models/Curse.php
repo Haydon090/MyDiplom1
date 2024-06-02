@@ -14,7 +14,12 @@ class Curse extends Model
     public function users()
 {
     return $this->belongsToMany(User::class);
+
 }
+public function ratings()
+    {
+        return $this->hasMany(CurseRating::class);
+    }
 protected static function boot()
 {
     parent::boot();
@@ -31,5 +36,9 @@ public function tags()
 public function lessions()
 {
     return $this->hasMany(Lession::class);
+}
+public function hasUserRated($userId)
+{
+    return $this->ratings()->where('user_id', $userId)->exists();
 }
 }
