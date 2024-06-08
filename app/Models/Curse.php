@@ -9,7 +9,7 @@ use League\CommonMark\Extension\Table\Table;
 class Curse extends Model
 {
     use HasFactory;
-    protected $fillable = ['Name','Description','Price'];
+    protected $fillable = ['Name','Description','Price','file_path'];
     protected $table = 'curses';
     public function users()
 {

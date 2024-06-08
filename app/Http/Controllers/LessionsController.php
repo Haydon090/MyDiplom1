@@ -92,6 +92,13 @@ class LessionsController extends Controller
 
         return redirect()->back();
     }
+    public function statistics()
+    {
+        // Извлечение всех курсов с их оценками и пользователями, которые их оставили
+        $curses = Curse::with(['ratings', 'ratings.user'])->get();
+
+        return view('curses.statistics', compact('curses'));
+    }
     public function destroy($curseId, $lessionId)
     {
         // Находим курс

@@ -14,7 +14,15 @@
                         <img src="{{ asset($material->File_path) }}" class="mt-3 mb-3" style="max-width: 100%; height: auto" width="900" height="300">
                     </div>
                 @elseif ($material->Type === 'video')
+
+                    @if(strpos($material->Url, 'youtube.com') !== false)
                     {!! str_replace(['width="560"', 'height="315"'], ['width="900"', 'height="500"'], $material->Url) !!}
+                @else
+                @php
+                $driveUrl = str_replace('/view?usp=drive_link', '/preview', $material->Url);
+            @endphp
+            <iframe src="{{ $driveUrl }}" width="900" height="500" allow="autoplay"></iframe>
+                @endif
                 @endif
                 @if (auth()->user()->role_id == 1)
                 <div class="mt-2">
@@ -115,7 +123,7 @@ jQuery(document).ready(function($) {
             var fileInput = $('<input>').attr('type', 'file').addClass('form-control-file').attr('name', 'image');
             inputFieldsDiv.append(fileInput);
         }else if(materialType ==='video'){
-            var urlInput = $('<input>').attr('type', 'text').addClass('form-control').attr('name', 'url').attr('placeholder', 'Enter YouTube URL');
+            var urlInput = $('<input>').attr('type', 'text').addClass('form-control').attr('name', 'url').attr('placeholder', 'введите вашу youtube или googleDrive ссылу');
             inputFieldsDiv.append(urlInput);
         }
     });

@@ -13,20 +13,21 @@ class MaterialsConroller extends Controller
     {
         // Проверяем тип материала
         $type = $request->input('materialType');
-        $maxNumber = Material::where('Lession_id', $request->input('lessionId'))->max('Number');
+        $maxNumber = Material::where('lession_id', $request->input('lessionId'))->max('Number');
+
         // Создаем новый материал в зависимости от типа
         if ($type === 'text') {
             $material = new Material();
             $material->Content = $request->input('quillContent');
             $material->Type = 'text';
-            $material->Lession_id = $request->input('lessionId');
+            $material->lession_id = $request->input('lessionId');
             $material->Number = $maxNumber + 1;
             $material->save();
         } elseif ($type === 'video') {
             $material = new Material();
             $material->Url = $request->input('url');
             $material->Type = 'video';
-            $material->Lession_id = $request->input('lessionId');
+            $material->lession_id = $request->input('lessionId');
             $material->Number = $maxNumber + 1;
             $material->save();
         } elseif ($type === 'image') {
@@ -40,7 +41,7 @@ class MaterialsConroller extends Controller
                 $material->FileName = $imageName;
                 $material->File_path = $imagePath;
                 $material->Type = 'image';
-                $material->Lession_id = $request->input('lessionId');
+                $material->lession_id = $request->input('lessionId');
                 $material->Number = $maxNumber + 1;
                 $material->save();
             } else {

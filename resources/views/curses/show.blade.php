@@ -84,7 +84,7 @@
 
 
                                     @endif
-                                    <div class="width-100"></div>
+
                                     @if (auth()->user()->role_id == 1)
                                     <form action="{{ route('curses.lessions.destroy', ['curseId' => $curse->id, 'lessionId' => $lession->id]) }}" method="POST">
                                         @csrf
@@ -94,6 +94,7 @@
                                         </button>
                                     </form>
                                 @endif
+
                             </div>
                         </td>
                     </tr>
@@ -111,14 +112,14 @@
 }) && !$userRatedCourse)
 <div class="row mt-4">
     <div class="col-md-12">
-        <h4>Rate this Course</h4>
+        <h4>Оцените курс</h4>
         <form action="{{ route('curses.rate', ['curseId' => $curse->id]) }}" method="POST">
             @csrf
             <div class="form-group">
-                <label for="rating">Your Rating:</label>
+                <label for="rating">Ваша оценка от 0 до 5</label>
                 <input type="number" name="rating" id="rating" class="form-control" min="1" max="5" required>
             </div>
-            <button type="submit" class="btn btn-primary">Submit Rating</button>
+            <button type="submit" class="btn btn-primary">Отправить</button>
         </form>
     </div>
 </div>
